@@ -1,4 +1,7 @@
 <p>users works!</p>
 <ul>
-    <li *ngFor="let user of users">{{user}}</li>
+    <li *ngFor="let user of users" (click)="onUserClick(user)">{{user}}</li>
 </ul>
+<div *ngIf="activeUser">
+    Active user: {{activeUser.name}}
+</div>
