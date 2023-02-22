@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/entities/user';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -21,6 +21,8 @@ export class UsersService {
   }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.url + 'users');
+    return this.http.get<User[]>(this.url + 'users').pipe(
+      map(jsonObj => jsonObj.map(jsonUser => User.clone(jsonUser)))
+    );
   }
 }
