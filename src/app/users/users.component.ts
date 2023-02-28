@@ -14,18 +14,17 @@ export class UsersComponent implements OnInit {
     new User('Alica','alica@alica.sk'),
     new User('Bob', 'bobik@kubik.sk', 1, new Date(),'tajne'),
     {name:'Cyril', email:'cylinder@post.sk', password:'cyriloveHeslo',
+     active: undefined, groups: undefined,
      toString: () => 'name: Cyril' }];
   activeUser?: User;
   columnsToDisplay = ['id','name','email'];
   errorText = '';
 
-  constructor(private usersService: UsersService,
-              private snackBar: MatSnackBar){}
+  constructor(private usersService: UsersService){}
 
   ngOnInit(): void {
     this.usersService.getUsers().subscribe({
-      next: users => this.users = users,
-      error: error => this.snackBar.open("Server not available","ERROR")
+      next: users => this.users = users
     });
   }
 

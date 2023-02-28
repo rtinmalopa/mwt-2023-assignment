@@ -1,22 +1,26 @@
-<mat-card>
+<form (ngSubmit)="onSubmit()">
+  <mat-card>
     <mat-card-header>
       <mat-card-title>Login to Films</mat-card-title>
       <mat-card-subtitle>Best place ever</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content>
+        <div *ngIf="message">{{message}}</div>
         <mat-form-field appearance="fill">
             <mat-label>User name</mat-label>
-            <input matInput>
+            <input matInput [(ngModel)]="auth.name" name="username">
         </mat-form-field>
         <mat-form-field appearance="fill">
             <mat-label>Enter your password</mat-label>
-            <input matInput [type]="hide ? 'password' : 'text'">
+            <input matInput [(ngModel)]="auth.password" name="pass" 
+                   [type]="hide ? 'password' : 'text'">
             <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
               <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             </button>
         </mat-form-field>
     </mat-card-content>
     <mat-card-actions>
-      <button mat-raised-button color="primary">Login</button>
+      <button type="submit" mat-raised-button color="primary">Login</button>
     </mat-card-actions>
   </mat-card>
+</form>
