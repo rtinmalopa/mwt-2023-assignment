@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/entities/user';
-import { map, Observable, of, catchError, EMPTY, Subscriber } from 'rxjs';
+import { map, Observable, of, catchError, EMPTY, Subscriber, tap } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Auth } from 'src/entities/auth';
 import { MessageService } from './message.service';
@@ -94,6 +94,16 @@ export class UsersService {
       this.username = '';
       this.router.navigateByUrl("/login");
     });
+  }
+
+  register(user:User):Observable<User> {
+    return this.http.post<User>(this.url + 'register', user).pipe(
+      tap(u => {
+        this.messageService.successMessage("User " + u.name + " is registered, please log in");
+        this.router.navigateByUrl("/login");
+      }),
+      catchError(error => this.processError(error))
+    );
   }
 
   processError(error:any): Observable<never> {
