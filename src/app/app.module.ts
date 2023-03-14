@@ -15,6 +15,8 @@ import { MaterialModule } from 'src/modules/material.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { GroupsToStringPipe } from '../pipes/groups-to-string.pipe';
 import { RegisterComponent } from './register/register.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import { RegisterComponent } from './register/register.component';
     ExtendedUsersComponent,
     NavbarComponent,
     GroupsToStringPipe,
-    RegisterComponent
+    RegisterComponent,
+    ConfirmDialogComponent,
+    EditUserComponent
   ],
   imports: [
     BrowserModule,

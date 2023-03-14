@@ -106,6 +106,26 @@ export class UsersService {
     );
   }
 
+  userConflicts(user:User): Observable<string[]> {
+    return this.http.post<string[]>(this.url + 'user-conflicts', user).pipe(
+      catchError(error => this.processError(error))
+    );
+  }
+
+  deleteUser(userId: number): Observable<boolean> {
+    return this.http.delete(this.url + 'user/' + userId+ '/' + this.token).pipe(
+      map(() => true),
+      catchError(error => this.processError(error))
+    );
+  }
+
+  getUser(userId: number): Observable<User> {
+    return this.http.get<User>(this.url + 'user/'+userId+'/'+this.token).pipe(
+      map(jsonUser => User.clone(jsonUser)),
+      catchError(error => this.processError(error))
+    );
+  }
+
   processError(error:any): Observable<never> {
     if (error instanceof HttpErrorResponse) {
       if (error.status === 0) {

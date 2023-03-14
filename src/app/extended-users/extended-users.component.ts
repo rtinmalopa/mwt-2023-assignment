@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { User } from 'src/entities/user';
 import { GroupsToStringPipe } from 'src/pipes/groups-to-string.pipe';
 import { UsersService } from 'src/services/users.service';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-extended-users',
@@ -12,13 +14,14 @@ import { UsersService } from 'src/services/users.service';
   styleUrls: ['./extended-users.component.css']
 })
 export class ExtendedUsersComponent implements OnInit, AfterViewInit {
-  columnsToDisplay = ['id','name','email','lastLogin','active','groups','perms'];
+  columnsToDisplay = ['id','name','email','lastLogin','active','groups','perms','buttons'];
   users: User[] = [];
   usersDataSource = new MatTableDataSource<User>();
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
-  constructor(private usersService: UsersService){}
+  constructor(private usersService: UsersService,
+              private dialog: MatDialog){}
  
   ngOnInit(): void {
     this.usersService.getExtendedUsers().subscribe(users =>
@@ -55,5 +58,21 @@ export class ExtendedUsersComponent implements OnInit, AfterViewInit {
     const filterText = event.target.value.trim().toLowerCase();
     this.usersDataSource.filter = filterText;
     this.usersDataSource.paginator?.firstPage();
+  }
+
+  deleteUser(user: User) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, { 
+        data: new ConfirmDialogData("Deleting user",
+                                    "Do you really want to delete user " + user.name + "?")}
+      );
+    dialogRef.afterClosed().subscribe(decision => {
+      if (decision) {
+        this.usersService.deleteUser(user.id || 0).subscribe(success => {
+          if (success) {
+            this.ngOnInit();
+          }
+        });
+      }
+    });
   }
 }

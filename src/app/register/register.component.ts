@@ -1,5 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { map, Observable } from 'rxjs';
 import { User } from 'src/entities/user';
 import { UsersService } from 'src/services/users.service';
 import * as zxcvbn from 'zxcvbn';
@@ -25,15 +26,42 @@ export class RegisterComponent {
   registerForm = new FormGroup({
     name: new FormControl<string>('',{nonNullable: true,
                                       validators: [Validators.required,
-                                                   Validators.minLength(3)]}),
+                                                   Validators.minLength(3)],
+                                      asyncValidators: this.userConflictsValidator('name')}),
     email: new FormControl('',[Validators.required, 
                                Validators.email,
-                               Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$")]),
+                               Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$")],
+                              this.userConflictsValidator('email')),
     password: new FormControl('', this.passwordValidator),
     password2: new FormControl('')
-  });
+  }, this.passwordsMatchValidator);
 
+  passwordsMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const passwordModel = control.get('password');
+    const password2Model = control.get('password2');
+    if (passwordModel?.value === password2Model?.value) {
+      password2Model?.setErrors(null);
+      return null;
+    } else {
+      const error = {'differentPasswords': 'Passwords do not match'};
+      password2Model?.setErrors(error);
+      return error;
+    }
+  }
 
+  userConflictsValidator(field: 'name'|'email'): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const name = field === 'name' ? control.value : '';
+      const email= field === 'email' ? control.value : '';
+      const user = new User(name, email);
+      return this.usersService.userConflicts(user).pipe(
+        map( arrayConflicts => {
+          if (arrayConflicts.length === 0) return null;
+          return { serverConflict: field + ' already present on server'}
+        })
+      )
+    }
+  }
 
   onSubmit(){
     const user = new User(this.name.value, 
