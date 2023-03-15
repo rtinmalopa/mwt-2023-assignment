@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { AbstractControl, AsyncValidatorFn, FormArray, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, map, Observable, of, switchMap } from 'rxjs';
+import { Group } from 'src/entities/group';
 import { User } from 'src/entities/user';
 import { UsersService } from 'src/services/users.service';
 
@@ -14,6 +15,7 @@ export class EditUserComponent implements OnInit {
   hide = true;
   userId?:number;
   user?: User;
+  allGroups: Group[] = [];
 
   editForm = new FormGroup({
     name: new FormControl<string>('',{nonNullable: true,
@@ -24,29 +26,55 @@ export class EditUserComponent implements OnInit {
                                Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,}$")],
                               this.userConflictsValidator('email')),
     password: new FormControl(''),
+    active: new FormControl<boolean>(false,{nonNullable: true}),
+    groups: new FormArray([])
   });
 
 
   constructor(private route: ActivatedRoute,
-              private usersService: UsersService){}
+              private usersService: UsersService,
+              private router: Router){}
   
   ngOnInit(): void {
     this.route.paramMap.pipe(
       switchMap(params => {
-        this.userId = +(params.get("id") || '');
-        if (this.userId) {
-          return this.usersService.getUser(this.userId)
-        } else {
-          return EMPTY;
+        if (params.has("id")) { //editing user
+          this.userId = +(params.get("id") || '');
+          if (this.userId) {
+            return this.usersService.getUser(this.userId)
+          } else {
+            return EMPTY;
+          }
+        } else { // new user
+          return of(new User("","",undefined,undefined,"",true,[]))
         }
       })
-    ).subscribe(user => this.user = user)
+    ).subscribe(user => {
+      this.user = user;
+      console.log(user);
+      this.editForm.patchValue({
+        name: user.name,
+        email: user.email,
+        active: user.active
+      });
+      this.usersService.getGroups().subscribe(groups => {
+        this.allGroups = groups;
+        this.groups.clear();
+        for(let group of groups ) {
+          if (this.user?.groups) {
+            const isMember = this.user.groups?.some(ug => ug.id === group.id);
+//            const isMember = !!this.user.groups?.find(ug => ug.id === group.id);
+            this.groups.push(new FormControl<boolean>(isMember));
+          }
+        }
+      });
+    })
   }
   userConflictsValidator(field: 'name'|'email'): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
       const name = field === 'name' ? control.value : '';
       const email= field === 'email' ? control.value : '';
-      const user = new User(name, email);
+      const user = new User(name, email, this.user?.id);
       return this.usersService.userConflicts(user).pipe(
         map( arrayConflicts => {
           if (arrayConflicts.length === 0) return null;
@@ -55,8 +83,20 @@ export class EditUserComponent implements OnInit {
       )
     }
   }
-  onSubmit(){
 
+  onSubmit(){
+    const pass = this.password.value.trim() || undefined;
+    const groups = this.allGroups.filter((_gr, i) => this.groups.at(i).value);
+    const user = new User(this.name.value,
+                          this.email.value, 
+                          this.user?.id, 
+                          undefined,
+                          pass,
+                          this.active.value,
+                          groups);
+    this.usersService.saveUser(user).subscribe(savedUser => 
+      this.router.navigateByUrl("/extended-users")
+    );
   }
 
   get name(): FormControl<string> {
@@ -67,5 +107,11 @@ export class EditUserComponent implements OnInit {
   }
   get password(): FormControl<string> {
     return this.editForm.get('password') as FormControl<string>
+  }
+  get active(): FormControl<boolean> {
+    return this.editForm.get('active') as FormControl<boolean>
+  }
+  get groups(): FormArray {
+    return this.editForm.get('groups') as FormArray
   }
 }
