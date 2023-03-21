@@ -20,7 +20,7 @@ export class LoginComponent {
     this.usersService.login(this.auth).subscribe(success => {
         if (success) {
           // idem na extended users
-          this.router.navigateByUrl("/extended-users");
+          this.router.navigateByUrl(this.usersService.navigateAfterLogin);
         } else {
           // vypisem ze zle heslo alebo login
           this.message = "Zlý login, alebo heslo!!!";

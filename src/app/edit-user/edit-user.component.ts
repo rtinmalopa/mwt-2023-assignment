@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { EMPTY, map, Observable, of, switchMap } from 'rxjs';
 import { Group } from 'src/entities/group';
 import { User } from 'src/entities/user';
+import { CanDeactivateComponent } from 'src/guards/deactivate.guard';
 import { UsersService } from 'src/services/users.service';
 
 @Component({
@@ -11,11 +12,12 @@ import { UsersService } from 'src/services/users.service';
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent implements OnInit {
+export class EditUserComponent implements OnInit, CanDeactivateComponent {
   hide = true;
   userId?:number;
   user?: User;
   allGroups: Group[] = [];
+  saved = false;
 
   editForm = new FormGroup({
     name: new FormControl<string>('',{nonNullable: true,
@@ -34,6 +36,7 @@ export class EditUserComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private usersService: UsersService,
               private router: Router){}
+  
   
   ngOnInit(): void {
     this.route.paramMap.pipe(
@@ -94,8 +97,10 @@ export class EditUserComponent implements OnInit {
                           pass,
                           this.active.value,
                           groups);
-    this.usersService.saveUser(user).subscribe(savedUser => 
-      this.router.navigateByUrl("/extended-users")
+    this.usersService.saveUser(user).subscribe(savedUser => {
+        this.saved = true;
+        this.router.navigateByUrl("/extended-users");
+      }
     );
   }
 
@@ -113,5 +118,13 @@ export class EditUserComponent implements OnInit {
   }
   get groups(): FormArray {
     return this.editForm.get('groups') as FormArray
+  }
+
+  canDeactivate(): boolean | Observable<boolean> {
+    if (this.saved) return true;
+    if (this.user?.name !== this.name.value) return false;
+    if (this.user?.email !== this.email.value) return false;
+    if (this.user?.active !== this.active.value) return false;
+    return true;
   }
 }

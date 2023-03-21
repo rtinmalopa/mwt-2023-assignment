@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/entities/user';
-import { map, Observable, of, catchError, EMPTY, Subscriber, tap } from 'rxjs';
+import { map, Observable, of, catchError, EMPTY, Subscriber, tap, defaultIfEmpty } from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Auth } from 'src/entities/auth';
 import { MessageService } from './message.service';
 import { Router } from '@angular/router';
 import { Group } from 'src/entities/group';
 
+const DEFAULT_NAVIGATE_AFTER_LOGIN = '/extended-users';
+
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-
+  navigateAfterLogin = DEFAULT_NAVIGATE_AFTER_LOGIN;
   url = 'http://localhost:8080/';
 //  token = '';
   users: User[] = [
@@ -91,6 +93,7 @@ export class UsersService {
     this.http.get(this.url + 'logout/' + this.token).pipe(
       catchError(error => this.processError(error))
     ).subscribe(() => {
+      this.navigateAfterLogin = DEFAULT_NAVIGATE_AFTER_LOGIN;
       this.token = '';
       this.username = '';
       this.router.navigateByUrl("/login");
@@ -147,6 +150,24 @@ export class UsersService {
       map(g => Group.clone(g)),
       catchError(error => this.processError(error))
     )
+  }
+
+  checkToken(): Observable<boolean>{
+    if (! this.token)
+      return of(false);
+    return this.http.get(this.url + 'check-token/' + this.token).pipe(
+      catchError(error => this.processError(error)),
+      defaultIfEmpty(false),
+      map(val => val !== false)
+    )
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.token;
+  }
+
+  isLoggedInAsync(): Observable<boolean> {
+    return this.checkToken();
   }
 
   processError(error:any): Observable<never> {

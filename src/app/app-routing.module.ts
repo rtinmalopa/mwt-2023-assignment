@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { DeactivateGuard } from 'src/guards/deactivate.guard';
 import { EditUserComponent } from './edit-user/edit-user.component';
 import { ExtendedUsersComponent } from './extended-users/extended-users.component';
 import { LoginComponent } from './login/login.component';
@@ -15,11 +16,13 @@ const routes: Routes = [
    canActivate: [AuthGuard]
   },
   {path: "user/edit/:id", component: EditUserComponent, data: {hocico: true},
-   canActivate: [AuthGuard]
+   canActivate: [AuthGuard],
+   canDeactivate: [DeactivateGuard]
   },
   {path: "user/new", 
    component: EditUserComponent,
-   canActivate: [AuthGuard]
+   canActivate: [AuthGuard],
+   canDeactivate: [DeactivateGuard]
   },
   {path: "login", component: LoginComponent},
   {path: "register", component: RegisterComponent},
