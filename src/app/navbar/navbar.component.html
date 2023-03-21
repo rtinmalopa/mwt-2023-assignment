@@ -9,6 +9,9 @@
     <a mat-button routerLink="/user/new" routerLinkActive="active">
         <mat-icon>person_add</mat-icon> New user
     </a>
+    <a mat-button routerLink="/groups" routerLinkActive="active">
+        <mat-icon>group</mat-icon> Groups
+    </a>
     <span class="spacer"></span>
     <span *ngIf="loggedUser; then thenBlock else elseBlock"></span>
     <ng-template #thenBlock>

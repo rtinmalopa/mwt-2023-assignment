@@ -17,6 +17,7 @@ import { GroupsToStringPipe } from '../pipes/groups-to-string.pipe';
 import { RegisterComponent } from './register/register.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { GroupsModule } from 'src/modules/groups/groups.module';
 
 
 @NgModule({
@@ -39,6 +40,7 @@ import { EditUserComponent } from './edit-user/edit-user.component';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
+    GroupsModule,
     AppRoutingModule
   ],
   providers: [],
