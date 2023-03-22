@@ -1,1 +1,11 @@
-<p>group-detail works!</p>
+<p>Group detail:</p>
+<ul>
+    <li>Name: <strong>{{group?.name}}</strong></li>
+    <li>Id: <strong>{{group?.id}}</strong></li>
+    <li>Permissions:
+        <ul>
+            <li *ngFor="let perm of group?.permissions">{{perm}}</li>
+        </ul>
+    </li>
+</ul>
+<app-group-edit-child [editingGroup]="group" (save)="onSave($event)"></app-group-edit-child>

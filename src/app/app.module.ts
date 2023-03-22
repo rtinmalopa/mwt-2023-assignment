@@ -40,7 +40,6 @@ import { GroupsModule } from 'src/modules/groups/groups.module';
     MaterialModule,
     FormsModule,
     ReactiveFormsModule,
-    GroupsModule,
     AppRoutingModule
   ],
   providers: [],

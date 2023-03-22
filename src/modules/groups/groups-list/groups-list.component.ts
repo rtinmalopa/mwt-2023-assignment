@@ -10,12 +10,18 @@ import { Group } from 'src/entities/group';
   styleUrls: ['./groups-list.component.css']
 })
 export class GroupsListComponent implements OnInit{
-  
+  groupToEdit?: Group;
   groups$?: Observable<Group[]>;
 
   constructor(private usersService: UsersService){}
   
   ngOnInit(): void {
     this.groups$ = this.usersService.getGroups();
+  }
+  onSave(groupToSave: Group) {
+    this.usersService.saveGroup(groupToSave).subscribe(saved => {
+      this.ngOnInit();
+      this.groupToEdit = undefined;
+    });
   }
 }

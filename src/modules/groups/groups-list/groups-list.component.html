@@ -1,4 +1,11 @@
 <p>groups-list works!</p>
 <ul>
-    <li *ngFor="let group of groups$ | async">{{group.name}}</li>
+    <li *ngFor="let group of groups$ | async">
+        <a routerLink="./detail/{{group.id}}">{{group.name}}</a>
+        <button type="button" mat-icon-button color="primary"
+          (click)="groupToEdit = group">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </li>
 </ul>
+<app-group-edit-child *ngIf="groupToEdit" [editingGroup]="groupToEdit" (save)="onSave($event)"></app-group-edit-child>
