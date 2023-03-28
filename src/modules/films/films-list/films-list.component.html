@@ -2,7 +2,7 @@
     <mat-label>filter</mat-label>
     <input matInput (keyup)="onFilter($event)">
 </mat-form-field>
-<table mat-table matSort [dataSource]="films">
+<table mat-table matSort [dataSource]="filmsDataSource">
     <mat-text-column name="id" headerText="ID"></mat-text-column>
     <ng-container matColumnDef="nazov">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Názov </th>

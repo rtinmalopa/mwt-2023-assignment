@@ -48,5 +48,4 @@ export class FilmsService {
       catchError(error => this.usersService.processError(error))
     );
   }
-
 }
