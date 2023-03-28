@@ -30,6 +30,10 @@ const routes: Routes = [
     canMatch: [AuthGuard],
     loadChildren: () => 
      import('../modules/groups/groups.module').then(mod => mod.GroupsModule)},
+  { path: "films",
+    loadChildren: () => 
+    import('../modules/films/films.module').then(mod => mod.FilmsModule)
+  },
   {path: "", redirectTo: "users", pathMatch: "full"},
   {path: "**", component: Page404Component}
 ];

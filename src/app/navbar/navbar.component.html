@@ -12,6 +12,9 @@
     <a mat-button routerLink="/groups" routerLinkActive="active">
         <mat-icon>group</mat-icon> Groups
     </a>
+    <a mat-button routerLink="/films" routerLinkActive="active">
+        <mat-icon>video_camera_back</mat-icon> Films
+    </a>
     <span class="spacer"></span>
     <span *ngIf="loggedUser; then thenBlock else elseBlock"></span>
     <ng-template #thenBlock>
