@@ -33,7 +33,7 @@ export class UsersService {
     }
   }
 
-  private get token(): string {
+  get token(): string {
     const value = localStorage.getItem("filmsToken");
     return value || '';
   }
