@@ -5,5 +5,26 @@
         <mat-hint>please, insert chat nick</mat-hint>
     </mat-form-field>
     <button type="submit" mat-raised-button color="primary"
-            [disabled]="connectModel.form.invalid">Connect</button>
+            [disabled]="connectModel.form.invalid || connected">Connect</button>
+    <button type="button" mat-raised-button color="primary"
+            [disabled]="!connected" (click)="onDisconnect()">Disconnect</button>
 </form>
+
+<div *ngIf="connected">
+    <form (ngSubmit)="onSend()" #sendModel="ngForm">
+        <mat-form-field appearance="fill">
+            <mat-label>Message</mat-label>
+            <input matInput [(ngModel)]="messageToSend" name="msg" required #messageInput>
+        </mat-form-field>
+        <button type="submit" mat-raised-button color="primary"
+                [disabled]="sendModel.form.invalid">Send</button>
+    </form>
+
+    <table mat-table matSort [dataSource]="messages">
+        <mat-text-column name="name" headerText="Name"></mat-text-column>
+        <mat-text-column name="message" headerText="Message"></mat-text-column>
+
+        <tr mat-header-row *matHeaderRowDef="['name','message']"></tr>
+        <tr mat-row *matRowDef="let myRowData; columns: ['name','message']"></tr>
+    </table>
+</div>
