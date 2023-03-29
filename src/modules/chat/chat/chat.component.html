@@ -1,0 +1,9 @@
+<form (ngSubmit)="onConnect()" #connectModel="ngForm">
+    <mat-form-field appearance="fill">
+        <mat-label>Nick</mat-label>
+        <input matInput [(ngModel)]="nick" name="username" required>
+        <mat-hint>please, insert chat nick</mat-hint>
+    </mat-form-field>
+    <button type="submit" mat-raised-button color="primary"
+            [disabled]="connectModel.form.invalid">Connect</button>
+</form>

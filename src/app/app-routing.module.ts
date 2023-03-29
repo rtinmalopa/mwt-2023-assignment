@@ -34,6 +34,10 @@ const routes: Routes = [
     loadChildren: () => 
     import('../modules/films/films.module').then(mod => mod.FilmsModule)
   },
+  { path: "chat",
+    loadChildren: () => 
+    import('../modules/chat/chat.module').then(mod => mod.ChatModule)
+  },
   {path: "", redirectTo: "users", pathMatch: "full"},
   {path: "**", component: Page404Component}
 ];
