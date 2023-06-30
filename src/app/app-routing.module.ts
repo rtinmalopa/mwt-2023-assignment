@@ -8,6 +8,8 @@ import { LoginComponent } from './login/login.component';
 import { Page404Component } from './page404/page404.component';
 import { RegisterComponent } from './register/register.component';
 import { UsersComponent } from './users/users.component';
+import { FilmAddComponent } from 'src/modules/films/film-add/film-add.component';
+import { FilmEditComponent } from 'src/modules/films/film-edit/film-edit.component';
 
 const routes: Routes = [
   {path: "users", component: UsersComponent},
@@ -38,8 +40,11 @@ const routes: Routes = [
     loadChildren: () => 
     import('../modules/chat/chat.module').then(mod => mod.ChatModule)
   },
+  { path: 'films/edit/:id', component: FilmEditComponent },
+  { path: 'films/add', component: FilmAddComponent },
   {path: "", redirectTo: "users", pathMatch: "full"},
   {path: "**", component: Page404Component}
+
 ];
 
 @NgModule({

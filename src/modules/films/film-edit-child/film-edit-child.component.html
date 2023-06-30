@@ -1,0 +1,50 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="filmEditForm">
+	<mat-card class="edit-card">
+
+		<mat-card-header>
+			<mat-card-title>{{ title }}</mat-card-title>
+		</mat-card-header>
+
+		<mat-card-content>
+			<mat-form-field appearance="fill">
+				<mat-label>Film Name</mat-label>
+				<input matInput type="text" formControlName="nazov" required>
+            </mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>Slovak film name</mat-label>
+				<input matInput type="text" formControlName="slovenskyNazov" required>
+            </mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>Year of release</mat-label>
+				<input matInput type="text" formControlName="rok" required>
+            </mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>IMDb ID</mat-label>
+				<input matInput type="text" formControlName="imdbID">
+				<mat-hint *ngIf="imdbID.value != ''">ID of film in worldwide film database <a href="https://www.imdb.com/title/{{ imdbID.value }}" title="Internet Movie Database (IMDb)" target="_blank">IMDb</a></mat-hint>
+				<mat-hint *ngIf="imdbID.value === ''">ID of film in worldwide film database <a href="https://www.imdb.com/" title="Internet Movie Database (IMDb)" target="_blank">IMDb</a></mat-hint>
+			</mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>AFI 1998 order</mat-label>
+				<input matInput type="text" formControlName="afi1998">
+				<mat-hint>American Film Institute Award 1998</mat-hint>
+			</mat-form-field>
+
+			<mat-form-field appearance="fill">
+				<mat-label>AFI 2007 order</mat-label>
+				<input matInput type="text" formControlName="afi2007">
+				<mat-hint>American Film Institute Award 2007</mat-hint>
+			</mat-form-field>
+
+		</mat-card-content>
+
+		<mat-card-actions>
+			<button class="button" mat-raised-button type="submit" color="primary" [disabled]="filmEditForm?.invalid">Save</button>
+		</mat-card-actions>
+
+	</mat-card>
+</form>

@@ -1,0 +1,31 @@
+.edit-card {
+    width: 500px;
+    margin: auto;
+    margin-bottom: 30px;
+}
+
+mat-form-field {
+    display: block;
+    margin-bottom: 10px;
+}
+
+mat-checkbox {
+    display: block;
+}
+
+.add {
+    margin-bottom: 10px;
+}
+
+.remove {
+    margin-bottom: 50px;
+}
+
+.info {
+    margin-top: 30px;
+}
+
+.button {
+    margin-top: 10px;
+    width: 100%;
+}

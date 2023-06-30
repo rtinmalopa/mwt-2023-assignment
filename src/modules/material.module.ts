@@ -13,6 +13,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatTabsModule} from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatGridListModule } from '@angular/material/grid-list'; 
+import { MatExpansionModule } from '@angular/material/expansion'; 
+import { MatSelectModule } from '@angular/material/select';
 
 const modules = [
   MatTableModule,
@@ -28,7 +32,11 @@ const modules = [
   MatDialogModule,
   MatSlideToggleModule,
   MatCheckboxModule,
-  MatTabsModule
+  MatTabsModule,
+  MatMenuModule,
+  MatGridListModule,
+  MatExpansionModule,
+  MatSelectModule
 ];
 
 @NgModule({

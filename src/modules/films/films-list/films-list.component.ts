@@ -27,7 +27,7 @@ export class FilmsListComponent implements OnInit, AfterViewInit{
 
   ngOnInit(): void {
     if (this.usersService.isLoggedIn()) {
-      this.columnsToDisplay = ['id','nazov','slovenskyNazov','rok','afi1998','afi2007'];
+      this.columnsToDisplay = ['id','nazov','slovenskyNazov','rok','afi1998','afi2007','edit'];
     }
     this.filmsService.getFilms().subscribe(resp => {
       this.films = resp.items;
